@@ -12,22 +12,22 @@ stage('build')
 {
 sh "${mavenHome}/bin/mvn clean package"
 }
-stage('executeSonarQube Report')
+stage('ExecuteSonarQube Report')
 {
 sh "${mavenHome}/bin/mvn clean sonar:sonar"
 }
 
-stage('uploadArtificatsinto nexus')
+stage('UploadArtificatsinto nexus')
 {
 sh "${mavenHome}/bin/mvn clean deploy"
 }
-stage('deploy into tomcat')
+stage('Deploy into Tomcat')
 {
 sshagent(['tomcatuser']){
 sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@18.220.161.15:/opt/apache-tomcat-9.0.37/webapps"
 }
 }
-stage('send email notification')
+stage('Send Email Notification')
 {
 emailext attachLog: true, body: '''build is over.. successfully deployed.
 
