@@ -2,20 +2,11 @@ node
 {
 def mavenHome = tool name: "maven-3.6.3"
 
-      echo "GitHub BranhName ${env.BRANCH_NAME}"
-      echo "Jenkins Job Number ${env.BUILD_NUMBER}"
-      echo "Jenkins Node Name ${env.NODE_NAME}"
-  
-      echo "Jenkins Home ${env.JENKINS_HOME}"
-      echo "Jenkins URL ${env.JENKINS_URL}"
-      echo "JOB Name ${env.JOB_NAME}"
-  
-
 properties([[$class: 'JiraProjectProperty'], buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), pipelineTriggers([pollSCM('* * * * *')])])
 
 stage('checkoutcode')
 {
-git branch: 'development', credentialsId: '5975a322-aa26-48dc-a271-2ff07428742d', url: 'https://github.com/CS-EC-Projects/Amazon.git'
+git branch: 'development', credentialsId: '5975a322-aa26-48dc-a271-2ff07428742d', url: 'https://github.com/CS-EC-Projects/Snapdeal.git'
 }
 stage('build')
 {
@@ -33,7 +24,7 @@ sh "${mavenHome}/bin/mvn clean deploy"
 stage('deploy into tomcat')
 {
 sshagent(['tomcatuser']){
-sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.128.76.183:/opt/apache-tomcat-9.0.37/webapps"
+sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@18.220.161.15:/opt/apache-tomcat-9.0.37/webapps"
 }
 }
 stage('send email notification')
